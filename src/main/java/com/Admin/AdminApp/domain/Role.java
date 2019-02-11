@@ -1,5 +1,6 @@
 package com.Admin.AdminApp.domain;
 
+import java.math.BigInteger;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -43,10 +44,43 @@ query=" select r.ROLE_NAME ,r.DESCRIPTION  , (SELECT STRING_AGG(p.PER_NAME , ' /
  " join PERMISSION p on p.PER_ID =pr.PERMISSION_ID "+
 " group by  r.ROLE_NAME ,r.ROLE_ID, r.DESCRIPTION ",
 	resultSetMapping="RolesOnHPMapping")
+
+@SqlResultSetMapping(
+	      name="RoleMapping",
+	      classes={
+	          @ConstructorResult(
+	                  targetClass=RoleResult.class,
+	                  columns={
+	                  @ColumnResult(name="role_id", type = BigInteger.class),
+	                  @ColumnResult(name="role_name", type = String.class),
+	                  @ColumnResult(name="description", type = String.class),
+	                  
+	                   
+	              }
+	          )
+	      }
+	  )
+
+//	@NamedNativeQuery(name="Role.getRoles",
+//	      query="SELECT R.role_id, R.description, R.role_name  "
+//			+"FROM ROLE AS R "
+//			+"INNER JOIN USER_ROLE ON USER_ROLE.ID = :user_id "
+//			+"INNER JOIN USERS ON user_role.role_id = r.role_id"
+//			, resultSetMapping="RoleMapping")
+
+@NamedNativeQuery(name="Role.getRoles",
+query="SELECT ROLE.role_id, ROLE.description, ROLE.role_name "+
+		 " FROM USERS " +
+         " INNER JOIN USER_ROLE ON USERS.USER_ID=USER_ROLE.USER_ID " +
+         " INNER JOIN ROLE ON ROLE.ROLE_ID=USER_ROLE.ROLE_ID " +
+         " WHERE((USERS.USER_ID)=:user_id) " , resultSetMapping="RoleMapping")
+
+
+
 public class Role {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long RoleId;
+	private BigInteger RoleId;
 	@Column(unique=true)
 	private String Role_name;
 	private String Description;
@@ -77,7 +111,6 @@ public class Role {
 	}
     
 
-
 	public Role(String role_name, String description, Set<Permission> permissions) {
 		super();
 		Role_name = role_name;
@@ -89,6 +122,14 @@ public class Role {
 		super();
 		Role_name = role_name;
 		Description = description;
+	}
+
+	public BigInteger getRoleId() {
+		return RoleId;
+	}
+
+	public void setRoleId(BigInteger roleId) {
+		RoleId = roleId;
 	}
 
 	public String getRole_name() {

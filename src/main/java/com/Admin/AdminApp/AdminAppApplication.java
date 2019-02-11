@@ -73,11 +73,11 @@ public class AdminAppApplication {
           Roles3.add(role2);
     
           
-          Users user1 = new Users("malik@gmail.com","0528432254","malik abed","pass1","yes",Roles1);
+          Users user1 = new Users("malik abed","malik@gmail.com","0528432254","pass11","yes",Roles1);
           UserRepository.save(user1);
-          Users user2 = new Users("asala@gmail.com","0528432254","asala","pass2","No",Roles2);
+          Users user2 = new Users("asala","asala@gmail.com","0528432254","pass22","No",Roles2);
           UserRepository.save(user2);
-          Users user3 = new Users("tawfek@gmail.com","0528432254","tawfek","pass3","yes",Roles3);
+          Users user3 = new Users("tawfek","tawfek@gmail.com","0528432254","pass33","yes",Roles3);
           UserRepository.save(user3);
      };
 	}
